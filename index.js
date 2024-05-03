@@ -174,6 +174,7 @@ async function getUserData() {
 async function playSong(trackId, position) {
     console.log('Playing song', trackId, position);
     window.player.setVolume(1);
+    clearTimeout(window.auto_pause_timer);
 
     const response = await fetch("https://api.spotify.com/v1/me/player/play?device_id=" + window.device_id, {
         method: 'PUT',
