@@ -5,16 +5,63 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Walkup Music Player</title>
+    <title>Spotify Soundboard Player</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
     <link rel="stylesheet" href="index.css">
 </head>
 
 <body>
-    <div id="embed-iframe"></div>
-    <button class="player_btn" data="1">Player 1</button>
-    <button class="player_btn" data="2">Player 2</button>
+    <div class="container logged-out">
+        <div class="row my-4">
+            <div class="col-12">
+                <h1>Spotify Soundboard Player</h1>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-12">
+                <button class="btn btn-primary" id="btn_login">Login with Spotify</button>
+            </div>
+        </div>
+    </div>
+    <div class="container logged-in">
+        <div class="row my-4">
+            <div class="col-12">
+                <h1>Spotify Soundboard Player</h1>
+            </div>
+        </div>
+        <div class="card p-4" id="main_player" style="display:none">
+            <div class="row">
+                <div class="col-md-4 col-12 my-3">
+                    <div class="player__album" style="height: 250px; width: 250px; background-color: #aaa; background-size: cover;"></div>
+                </div>
+                <div class="col-md-8 col-12 my-3">
+                    <div class="player__info">
+                        <h2 class="player__info__title">Select a song below</h2>
+                        <h3 class="player__info__artist"></h3>
+                    </div>
+                    <div class="player__controls mt-4">
+                        <button class="player__controls__btn btn btn-lg btn-secondary" id="btn_playpause" data-action="play">
+                            <i class="fas fa-play"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row mt-5">
+            <!-- Buttons for each softball player -->
+            <div class="col-12 d-grid gap-2" id="soundboard_buttons" style="max-width: 300px">
 
-    <script src="https://open.spotify.com/embed/iframe-api/v1" async></script>
+            </div>
+        </div>
+    </div>
+
+    <script src="js-yaml.min.js"></script>
+    <script src="https://kit.fontawesome.com/fd718231e6.js" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
+        crossorigin="anonymous"></script>
+    <script src="https://sdk.scdn.co/spotify-player.js" async></script>
     <script src="index.js"></script>
 </body>
 
