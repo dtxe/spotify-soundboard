@@ -91,6 +91,8 @@ async function onLoad() {
     if (!currentToken.access_token) {
         document.querySelectorAll('.logged-in').forEach(e => e.style.display = 'none');
         document.querySelectorAll('.logged-out').forEach(e => e.style.display = '');
+        document.getElementById('alert_connecting').style.display = 'none';
+        document.getElementById('frm_login').style.display = '';
     }
 }
 
@@ -234,14 +236,39 @@ async function updatePlayPauseButton(to_state = null) {
     if (to_state == 'play') {
         e.innerHTML = '<i class="fas fa-play"></i>';
         e.dataset.action = 'play';
+
+        // also stop timer to check state
+        clearInterval(window.player_time_updater);
     } else if (to_state == 'pause') {
         e.innerHTML = '<i class="fas fa-pause"></i>';
         e.dataset.action = 'pause';
+
+        // also start timer to check state
+        window.player_time_updater = setInterval(updatePlayerTime, 250);
     }
 }
 
+async function updatePlayerTime(state = null) {
+    if (!state) {
+        state = await window.player.getCurrentState();
+    }
+    if (!state) {
+        return;
+    }
+
+    const position = state.position;
+    const duration = state.duration;
+
+    const position_minutes = Math.floor(position / 60000);
+    const position_seconds = Math.floor((position % 60000) / 1000);
+    const duration_minutes = Math.floor(duration / 60000);
+    const duration_seconds = Math.floor((duration % 60000) / 1000);
+
+    document.getElementById('player__controls__time').innerText = `${position_minutes}:${position_seconds.toString().padStart(2, '0')} / ${duration_minutes}:${duration_seconds.toString().padStart(2, '0')}`;
+}
+
 async function updateSoundboardButtons() {
-    const button_data_yml = await fetch('button_data.yml').then(response => response.text());
+    const button_data_yml = await fetch('button_data.yml', { cache: "no-store" }).then(response => response.text());
     window.button_data = jsyaml.load(button_data_yml);
 
     document.getElementById('soundboard_buttons').innerHTML = window.button_data.map((button, idx) => {
@@ -249,11 +276,14 @@ async function updateSoundboardButtons() {
     }).join('');
 }
 
-async function queueAutoPause() {
-    const state = await window.player.getCurrentState();
+async function queueAutoPause(state = null) {
+    if (!state) {
+        state = await window.player.getCurrentState();
+    }
     if (!state) { return; }
     if (state.paused) { return; }
     if (!window.current_player_idx) { return; }
+    // if (window.auto_pause_timer) { return; }
 
     const target = button_data[window.current_player_idx].end * 1000;
     const position = state.position;
@@ -281,8 +311,9 @@ async function initializeSpotifyPlayer() {
         Array.from(document.getElementsByClassName('player__info__title')).forEach(x => x.innerText = state.track_window.current_track.name);
         Array.from(document.getElementsByClassName('player__info__artist')).forEach(x => x.innerText = state.track_window.current_track.artists[0].name);
         Array.from(document.getElementsByClassName('player__album')).forEach(x => x.style.backgroundImage = `url('${state.track_window.current_track.album.images[0].url}')`);
-        updatePlayPauseButton();
-        queueAutoPause();
+        updatePlayPauseButton(state.paused ? 'play' : 'pause');
+        queueAutoPause(state);
+        updatePlayerTime(state);
     });
 
     player.addListener('ready', ({ device_id }) => {
@@ -290,6 +321,7 @@ async function initializeSpotifyPlayer() {
         window.device_id = device_id;
 
         document.getElementById('main_player').style.display = '';
+        document.getElementById('loading_player').style.display = 'none';
 
         // load player buttons
         updateSoundboardButtons();
@@ -318,6 +350,11 @@ document.getElementById('soundboard_buttons').addEventListener('click', (e) => {
         window.current_player_idx = e.target.getAttribute('data-player');
         const player = window.button_data[window.current_player_idx];
         playSong(player.track, player.start);
+
+        // update in out
+        document.getElementById('player__controls__in').innerText = `${Math.floor(player.start / 60)}:${(player.start % 60).toString().padStart(2, '0')}`;
+        document.getElementById('player__controls__out').innerText = `${Math.floor(player.end / 60)}:${(player.end % 60).toString().padStart(2, '0')}`;
+
         window.player.activateElement();
     }
 });
