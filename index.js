@@ -3,7 +3,12 @@ window.player_ready = false;
 
 
 const clientId = '5ee837cf909a4d62a7ef202ee7b16201';
-const redirectUrl = 'http://localhost:8081';
+let redirectUrl = null;
+if (window.location.hostname === 'localhost') {
+    redirectUrl = 'http://localhost:8081';
+} else {
+    redirectUrl = 'https://soundboard.simeon.dev';
+}
 
 const authorizationEndpoint = "https://accounts.spotify.com/authorize";
 const tokenEndpoint = "https://accounts.spotify.com/api/token";
