@@ -1,14 +1,25 @@
-- name: (7) Andy
+- name: (7) Lila
   track: 2FY7b99s15jUprqC0M5NCT
   start: 45
   end: 55
 
-- name: (4) Erika
+- name: (4) Alex
   track: 4rxm1FHvVNwlKXkSNcP8BH
   start: 10
   end: 20
 
-- name: (27) Grace
+- name: (27) Mateo
   track: 7ofj9JjyUFJ5loeIM9cijS
   start: 0
   end: 10
+
+- name: (1) Sofia
+  track: 4GITtbZtRCQXhWLMXrWXHt
+  start: 0
+  end: 10
+
+- name: (50) Kai
+  track: 6V1hifeDLaVLiwq27bRXF0
+  start: 0
+  end: 10
+  
