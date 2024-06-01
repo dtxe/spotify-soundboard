@@ -1,5 +1,6 @@
 
 window.player_ready = false;
+window.playlist = 'button_data.yml';
 
 
 const clientId = '5ee837cf909a4d62a7ef202ee7b16201';
@@ -37,6 +38,11 @@ async function onLoad() {
     // On page load, try to fetch auth code from current browser search URL
     const args = new URLSearchParams(window.location.search);
     const code = args.get('code');
+
+    const pl = new URLSearchParams(window.location.hash.substring(1)).get('pl');
+    if (pl) {
+        window.playlist = pl + '.yml';
+    }
 
     // If we find a code, we're in a callback, do a token exchange
     if (code) {
@@ -268,7 +274,7 @@ async function updatePlayerTime(state = null) {
 }
 
 async function updateSoundboardButtons() {
-    const button_data_yml = await fetch('button_data.yml', { cache: "no-store" }).then(response => response.text());
+    const button_data_yml = await fetch(window.playlist, { cache: "no-store" }).then(response => response.text());
     window.button_data = jsyaml.load(button_data_yml);
 
     document.getElementById('soundboard_buttons').innerHTML = window.button_data.map((button, idx) => {
