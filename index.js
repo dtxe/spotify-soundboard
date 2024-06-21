@@ -41,7 +41,7 @@ async function onLoad() {
 
     const hash = window.location.hash.substring(1);
     if (hash.startsWith('pl=')) {
-        window.playlist = hash.substring(3) + '.yml';
+        window.playlist = hash.substring(3).replace(/[^a-zA-Z0-9\-_.~]/g, '') + '.yml';
     }
     if (hash.startsWith('data=')) {
         window.playlist = null;
@@ -279,7 +279,7 @@ async function updatePlayerTime(state = null) {
 async function updateSoundboardButtons() {
     if (window.playlist !== null) {
         const button_data_yml = await fetch(window.playlist, { cache: "no-store" }).then(response => response.text());
-        window.button_data = jsyaml.load(button_data_yml);
+        window.button_data = jsyaml.load(button_data_yml, { schema: jsyaml.FAILSAFE_SCHEMA });
     }
 
     document.getElementById('soundboard_buttons').innerHTML = window.button_data.map((button, idx) => {
