@@ -39,9 +39,13 @@ async function onLoad() {
     const args = new URLSearchParams(window.location.search);
     const code = args.get('code');
 
-    const pl = new URLSearchParams(window.location.hash.substring(1)).get('pl');
-    if (pl) {
-        window.playlist = pl + '.yml';
+    const hash = window.location.hash.substring(1);
+    if (hash.startsWith('pl=')) {
+        window.playlist = hash.substring(3) + '.yml';
+    }
+    if (hash.startsWith('data=')) {
+        window.playlist = null;
+        window.button_data = jsyaml.load(atob(hash.substring(5)), { schema: jsyaml.FAILSAFE_SCHEMA });
     }
 
     // If we find a code, we're in a callback, do a token exchange
@@ -101,7 +105,6 @@ async function onLoad() {
         document.getElementById('frm_login').style.display = '';
     }
 }
-
 
 async function redirectToSpotifyAuthorize() {
     const possible = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
@@ -274,8 +277,10 @@ async function updatePlayerTime(state = null) {
 }
 
 async function updateSoundboardButtons() {
-    const button_data_yml = await fetch(window.playlist, { cache: "no-store" }).then(response => response.text());
-    window.button_data = jsyaml.load(button_data_yml);
+    if (window.playlist !== null) {
+        const button_data_yml = await fetch(window.playlist, { cache: "no-store" }).then(response => response.text());
+        window.button_data = jsyaml.load(button_data_yml);
+    }
 
     document.getElementById('soundboard_buttons').innerHTML = window.button_data.map((button, idx) => {
         return `<button class="player_btn btn btn-outline-dark" data-player="${idx}">${button.name}</button>`;
