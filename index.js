@@ -186,7 +186,6 @@ async function playSong(trackId, position) {
     console.log('Playing song', trackId, position);
     clearTimeout(window.auto_pause_timer);
     clearInterval(window.volume_timer);
-    window.player.setVolume(1);
 
     const response = await fetch("https://api.spotify.com/v1/me/player/play?device_id=" + window.device_id, {
         method: 'PUT',
@@ -229,7 +228,7 @@ async function pauseTaper(fade_time = 5000) {
         if (window.current_volume <= 0) {
             clearInterval(window.volume_timer);
             window.current_volume = null;
-            window.player.pause();
+            window.player.pause().then(() => window.player.setVolume(1));
         }
     }, 50);
 }
