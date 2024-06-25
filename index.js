@@ -334,6 +334,7 @@ async function initializeSpotifyPlayer() {
 
         document.getElementById('main_player').style.display = '';
         document.getElementById('loading_player').style.display = 'none';
+        document.getElementsByTagName('body')[0].style.background = 'none';
 
         // load player buttons
         updateSoundboardButtons();
@@ -342,6 +343,7 @@ async function initializeSpotifyPlayer() {
     player.addListener('not_ready', ({ device_id }) => {
         // attempt to reconnect
         player.connect();
+        document.getElementsByTagName('body')[0].style.background = '#ffdbd9';
         console.log('Device ID has gone offline', device_id);
     });
 
