@@ -186,6 +186,7 @@ async function playSong(trackId, position) {
     console.log('Playing song', trackId, position);
     window.player.setVolume(1);
     clearTimeout(window.auto_pause_timer);
+    clearInterval(window.volume_timer);
 
     const response = await fetch("https://api.spotify.com/v1/me/player/play?device_id=" + window.device_id, {
         method: 'PUT',
@@ -339,6 +340,8 @@ async function initializeSpotifyPlayer() {
     });
 
     player.addListener('not_ready', ({ device_id }) => {
+        // attempt to reconnect
+        player.connect();
         console.log('Device ID has gone offline', device_id);
     });
 
