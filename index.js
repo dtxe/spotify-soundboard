@@ -2,6 +2,8 @@
 window.player_ready = false;
 window.playlist = 'button_data.yml';
 
+document.documentElement.setAttribute('data-bs-theme', (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light'));
+
 
 const clientId = '5ee837cf909a4d62a7ef202ee7b16201';
 let redirectUrl = null;
