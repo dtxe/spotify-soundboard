@@ -286,7 +286,7 @@ async function updateSoundboardButtons() {
     }
 
     document.getElementById('soundboard_buttons').innerHTML = window.button_data.map((button, idx) => {
-        return `<button class="player_btn btn btn-outline-secondary" data-player="${idx}">${button.name}</button>`;
+        return `<button class="player_btn btn btn-dark" data-player="${idx}">${button.name}</button>`;
     }).join('');
 }
 
